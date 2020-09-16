@@ -116,7 +116,8 @@
             "linter": "eslint",
             "tsConfig": [
               "libs/demo-lib/tsconfig.lib.json",
-              "libs/demo-lib/tsconfig.spec.json"
+              "libs/demo-lib/tsconfig.spec.json",
+              "libs/demo-lib/.storybook/tsconfig.json"
             ],
             "exclude": ["**/node_modules/**", "!libs/demo-lib/**/*"]
           }
@@ -126,6 +127,64 @@
           "options": {
             "jestConfig": "libs/demo-lib/jest.config.js",
             "passWithNoTests": true
+          }
+        },
+        "storybook": {
+          "builder": "@nrwl/storybook:storybook",
+          "options": {
+            "uiFramework": "@storybook/react",
+            "port": 4400,
+            "config": {
+              "configFolder": "libs/demo-lib/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        },
+        "build-storybook": {
+          "builder": "@nrwl/storybook:build",
+          "options": {
+            "uiFramework": "@storybook/react",
+            "outputPath": "dist/storybook/demo-lib",
+            "config": {
+              "configFolder": "libs/demo-lib/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        }
+      }
+    },
+    "demo-lib-e2e": {
+      "root": "apps/demo-lib-e2e",
+      "sourceRoot": "apps/demo-lib-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/demo-lib-e2e/cypress.json",
+            "tsConfig": "apps/demo-lib-e2e/tsconfig.e2e.json",
+            "devServerTarget": "demo-lib:storybook"
+          },
+          "configurations": {
+            "ci": {
+              "devServerTarget": "demo-lib:storybook:ci"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": ["apps/demo-lib-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/demo-lib-e2e/**/*"]
           }
         }
       }
